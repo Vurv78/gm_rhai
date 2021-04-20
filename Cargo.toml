@@ -1,0 +1,14 @@
+[package]
+name = "gmrhai"
+version = "0.1.0"
+authors = ["Vurv <56230599+Vurv78@users.noreply.github.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[lib]
+crate-type = ["cdylib"] # This tells rust we want to create a .dll file that links to C code.
+
+[dependencies]
+rglua = { git = "https://github.com/Vurv78/rglua", branch = "main" }
+rhai = "0.20.0"
