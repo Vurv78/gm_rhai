@@ -1,5 +1,5 @@
 ## gm_rhai
-This is so far just a binary module that adds [rhai](https://github.com/rhaiscript/rhai) scripting to garrysmod using (rglua)[https://github.com/Vurv78/rglua].
+This is so far just a binary module that adds [rhai](https://github.com/rhaiscript/rhai) scripting to garrysmod using [rglua](https://github.com/Vurv78/rglua).
 
 It adds a table that only contains one function ``run``.
 It only has ``print`` exposed to print to the gmod console though, since this is just a proof of concept until I expose entity methods or something.
