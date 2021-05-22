@@ -1,18 +1,18 @@
+#[macro_use] extern crate rglua;
+
 use rglua::{
     types::{
         LuaState
     },
     cstring,
     rstring,
-    LUA_SHARED
+    lua_shared::*
 };
 
 use rhai::{Engine};
 
 pub extern fn run_code(state: LuaState) -> i32 {
-    let shared = *LUA_SHARED;
-
-    let code = rstring!(shared.lua_tostring(state, 1));
+    let code = rstring!( lua_tostring!(state, 1) );
 
     let mut engine = Engine::new();
 
@@ -39,31 +39,19 @@ pub extern fn run_code(state: LuaState) -> i32 {
 
 #[no_mangle]
 pub extern fn gmod13_open(state: LuaState) -> i32 {
-    let could_mount_shared = match &*rglua::LUA_SHAREDR {
-        Ok(_) => true,
-        Err(why) => {
-            eprintln!("Couldn't mount lua_shared.dll! {}", why);
-            false
-        }
-    };
+    lua_getglobal!(state, cstring!("print"));
+    lua_pushstring(state, cstring!("Hello from rust!"));
+    lua_call(state, 1, 0);
 
-    if could_mount_shared {
-        let shared = *LUA_SHARED;
+    // local t = {}
+    lua_createtable(state, 0, 0);
 
-        shared.lua_getglobal(state, cstring!("print"));
-        shared.lua_pushstring(state, cstring!("Hello from rust!"));
-        shared.lua_call(state, 1, 0);
-    
-        // local t = {}
-        shared.lua_createtable(state, 0, 0);
-    
-        // t.run = function()
-        shared.lua_pushcfunction(state, run_code);
-        shared.lua_setfield(state, -2, cstring!("run"));
-    
-        // _G.rhai = t
-        shared.lua_setglobal(state, cstring!("rhai"));
-    }
+    // t.run = function()
+    lua_pushcfunction!(state, run_code);
+    lua_setfield(state, -2, cstring!("run"));
+
+    // _G.rhai = t
+    lua_setglobal!(state, cstring!("rhai"));
     0
 }
 
